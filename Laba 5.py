@@ -1,150 +1,26 @@
-#Single Responsibility Principle
-#Принцип единственной Обязательности
-class Car:
-    def __init__(self, Machine_brand: str):
-        self.Mashine_brand = brand
-
-    def get_name(self):
-        pass
-
-class UserDB:
-    def get_brand(self, id) -> Car:
-        pass
-    def preservation(self, car: Car):
-        pass
-
-#Open - Closed Principle
-#Принцип открытости / закрытости
-class Employee:
-    def __init__(self,name):
+class User:
+    def __init__(self, name, email, address):
         self.name = name
+        self.email = email
+        self.address =address
 
-    def get_info(self):
-        return f"{self.name} is an employee"
-
-class Manager(Employee):
-    def __init__(self, name, department):
-        super().__init__(name)
-        self.department = department
-
-    def get_info(self):
-        return f"{self.name} leads department {self.department}"
-
-#Liskov Substitution Principle
-#Принцип подстановки листов      !!!производные классы должны заменять свои базовые классы, не вызывая ошибок.
-from abc import ABC, abstractmethod
-
-
-class Notification(ABC):
-    @abstractmethod
-    def notify(self, message, email):
-        pass
-
-
-class Email(Notification):
-    def notify(self, message, email):
-        print(f'Send {message} to {email}')
-
-
-class SMS(Notification):
-    def notify(self, message, phone):
-        print(f'Send {message} to {phone}')
-
-
-if __name__ == '__main__':
-    notification = SMS()
-    notification.notify('Hello', 'john@test.com')
-
-#Interface Segregation Principle
-#Принцип разделения интерфейсов
-class Bird(ABC):
-
-    def __init__(self, name):
+class Product:
+    def __init__(self, name, prise, description):
         self.name = name
+        self.prise = prise #Цена продукта
+        self.description = description #Описание продукта
 
-    @abstractmethod
-    def do_sound(self) -> str:
-        pass
+class Order:# Заказ
+    def __init__(self, user, product, quantity):
+        self.user = user
+        self.product = product
+        self.quantity = quantity # Кол-во
+        self.total_prise = product.prise * quantity #Общая цена
 
+    def display_order(self):
+        print("{} ordered {} {} for ${}".format(self.user.name, self.quantity, self.product.name, self.total_prise))
 
-class FlyingBird(Bird):
-
-    @abstractmethod
-    def fly(self):
-        pass
-
-
-class SwimmingBird(Bird):
-
-    @abstractmethod
-    def swim(self):
-        pass
-
-
-class Crow(FlyingBird):
-
-    def fly(self):
-        print(f"{self.name} is flying high and fast!")
-
-    def do_sound(self) -> str:
-        return "Caw"
-
-
-class Duck(SwimmingBird, FlyingBird):
-
-    def fly(self):
-        print(f"{self.name} is flying not very high")
-
-    def swim(self):
-        print(f"{self.name} swims in the lake and quacks")
-
-    def do_sound(self) -> str:
-        return "Quack"
-
-#Dependecy Inversion Principle
-#Принцип инверсии зависимостей
-from abc import ABC
-
-
-class CurrencyConverter(ABC):
-    def convert(self, from_currency, to_currency, amount) -> float:
-        pass
-
-
-class FXConverter(CurrencyConverter):
-    def convert(self, from_currency, to_currency, amount) -> float:
-        print('Converting currency using FX API')
-        print(f'{amount} {from_currency} = {amount * 1.2} {to_currency}')
-        return amount * 1.15
-
-
-class AlphaConverter(CurrencyConverter):
-    def convert(self, from_currency, to_currency, amount) -> float:
-        print('Converting currency using Alpha API')
-        print(f'{amount} {from_currency} = {amount * 1.2} {to_currency}')
-        return amount * 1.2
-
-
-class App:
-    def __init__(self, converter: CurrencyConverter):
-        self.converter = converter
-
-    def start(self):
-        self.converter.convert('EUR', 'USD', 100)
-
-
-if __name__ == '__main__':
-    converter = AlphaConverter()
-    app = App(converter)
-    app.start()
-
-
-
-
-
-
-
-
-
-
-
+user1 = User("John Doe", "jdoe@example.com", "123 Main St")
+product1 = Product("Apple AirPods", 159.00, "Bluetooth headphones")
+order1 = Order(user1, product1, 2)
+order1.display_order()
